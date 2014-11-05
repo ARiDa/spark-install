@@ -67,14 +67,16 @@ function add_user_group()
 
 function install_java_7() {
     echo "Checking Java 7"
-    if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-7-jdk | grep 'installed' | wc -l) -eq 0 ]; then
-        echo "Installing Java 7"
-        sudo apt-get update >> $LOG
-        sudo apt-get install vim openjdk-7-jdk >> $LOG
-    fi
+    if [ "$(uname)" == "Linux"]; then
+        if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-7-jdk | grep 'installed' | wc -l) -eq 0 ]; then
+            echo "Installing Java 7"
+            sudo apt-get update >> $LOG
+            sudo apt-get install vim openjdk-7-jdk >> $LOG
+        fi
 
-    if [ $(jps | grep  'Jps' | wc -l) -eq 1 ]; then
-        echo "Java 7 installed"
+        if [ $(jps | grep  'Jps' | wc -l) -eq 1 ]; then
+            echo "Java 7 installed"
+        fi
     fi
 }
 
@@ -114,9 +116,12 @@ function delete_spark_files() {
 function download_spark() {
 
     if [ $(ls| grep $SPARK | wc -l) -eq 0 ]; then
-        echo "Downloading "$SPARK
-        wget http://d3kbcqa49mib13.cloudfront.net/$SPARK.tgz >> $LOG
-        tar xzf $SPARK.tgz* >> $LOG
+
+        if [ $(ls| grep ${SPARK}.tgz | wc -l) -eq 0 ]; then
+            echo "Downloading "$SPARK
+            wget http://d3kbcqa49mib13.cloudfront.net/$SPARK.tgz
+        fi
+        tar xzf $SPARK.tgz
         rm $SPARK.tgz
     fi
 
@@ -137,11 +142,11 @@ function bashrc_file() {
     fi
     sudo sed -i '/Spark/Id' /home/$USER/.bashrc
     if [[ "$1" = "a" ]] ; then
-        sudo echo -e "# Start: Set Spark-related environment variables" >> /home/$USER/.bashrc
-        sudo echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" >> /home/$USER/.bashrc
-        sudo echo -e "export PATH=\$PATH:\$SPARK_HOME/bin:\$HADOOP_HOME/sbin\t#Add Spark bin/ directory to PATH" >> /home/$USER/.bashrc
-        sudo echo -e "export JAVA_HOME=${JAVA_HOME}\t#Java Path, Required For Spark" >> /home/$USER/.bashrc
-        sudo echo -e "# End: Set Spark-related environment variables" >> /home/$USER/.bashrc
+        echo -e "# Start: Set Spark-related environment variables" | sudo tee -a /home/$USER/.bashrc
+        echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" | sudo tee -a /home/$USER/.bashrc
+        echo -e "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin\t#Add Spark bin/ directory to PATH" | sudo tee -a /home/$USER/.bashrc
+        echo -e "export JAVA_HOME=${JAVA_HOME}\t#Java Path, Required For Spark" | sudo tee -a /home/$USER/.bashrc
+        echo -e "# End: Set Spark-related environment variables" | sudo tee -a /home/$USER/.bashrc
     fi
 }
 
@@ -165,7 +170,7 @@ function install_spark() {
     INSTALLED=check_spark_install
     if [ $INSTALLED == true ]; then
         echo "Spark already installed"
-        exit 0 ;;
+        uninstall_spark
     fi
     (download_spark) & spinner $!
     (add_user_group) & spinner $!
