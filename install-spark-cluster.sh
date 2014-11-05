@@ -25,10 +25,10 @@ ssh $USER@$SLAVE "wget https://github.com/ARiDa/spark-install/archive/master.zip
 
 install_public_key_slaves
 
-for SLAVE in $SLAVES
-do
-    if [ "localhost" != "$SLAVE" ]; then
-        echo "Installing Spark on $SLAVE"
-        install_spark_single_node_template $SLAVE
-    fi
-done
+# for SLAVE in $SLAVES
+# do
+#     if [ "localhost" != "$SLAVE" ]; then
+#         echo "Installing Spark on $SLAVE"
+#         install_spark_single_node_template $SLAVE
+#     fi
+# done
