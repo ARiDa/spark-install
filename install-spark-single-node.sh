@@ -70,6 +70,8 @@ function setup_ssh() {
 	echo "ssh ..."
 	if [ ! -d "/home/$USER/.ssh" ]; then
 		sudo mkdir /home/$USER/.ssh
+        sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa.pub" -q
+
         if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
             sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
         fi
