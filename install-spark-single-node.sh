@@ -13,8 +13,8 @@ tar xzf $SPARK.tgz
 cd $SPARK
 
 cat conf/spark-env.sh.template > conf/spark-env.sh
-echo $MASTER_IP >> conf/spark-env.sh
-echo $SPARK_WORKER_MEMORY >> conf/spark-env.sh
+echo "MASTER_IP="$MASTER_IP >> conf/spark-env.sh
+echo "SPARK_WORKER_MEMORY="$SPARK_WORKER_MEMORY >> conf/spark-env.sh
 
 cat $DIR/slaves > conf/slaves
 
