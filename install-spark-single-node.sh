@@ -35,6 +35,7 @@ function download_spark() {
         echo "Downloading "$SPARK
         wget http://d3kbcqa49mib13.cloudfront.net/$SPARK.tgz >> $LOG
         tar xzf $SPARK.tgz >> $LOG
+        rm $SPARK.tgz
     fi
 
     sudo mv $SPARK $SPARK_PREFIX
