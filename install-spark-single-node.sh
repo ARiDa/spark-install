@@ -31,7 +31,7 @@ function install_java_7() {
 
 function download_spark() {
 
-    if [ $(ls $SPARK | wc -l) -eq 0 ]; then
+    if [ $(ls| grep $SPARK | wc -l) -eq 0 ]; then
         echo "Downloading "$SPARK
         wget http://d3kbcqa49mib13.cloudfront.net/$SPARK.tgz >> $LOG
         tar xzf $SPARK.tgz* >> $LOG
