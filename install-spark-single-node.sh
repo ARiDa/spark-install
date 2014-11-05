@@ -38,7 +38,8 @@ function download_spark() {
         rm $SPARK.tgz
     fi
 
-    sudo mv $SPARK $SPARK_PREFIX
+    sudo rm -r $SPARK_HOME
+    sudo mv $SPARK $SPARK_PREFIX/
     sudo chown -R $USER:$USER $SPARK_HOME
 
 }
