@@ -6,7 +6,7 @@ NODE_TYPE=$1
 
 SPARK=spark-1.1.0-bin-hadoop2.4
 
-SPARK_PREFIX=/usr/local/
+SPARK_PREFIX=/usr/local
 
 SPARK_HOME=$SPARK_PREFIX/$SPARK
 
