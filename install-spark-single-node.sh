@@ -137,9 +137,9 @@ function download_spark() {
 
 function bashrc_file() {
     if [[ "$1" = "a" ]]; then
-        printMsg "Adding Hadoop Environment Variables in $USER_NAME's .bashrc File"
+        printMsg "Adding Spark Environment Variables in $USER_NAME's .bashrc File"
     else
-        printMsg "Reverting Hadoop Environment Variables Changes"
+        printMsg "Reverting Spark Environment Variables Changes"
     fi
     sudo sed -i '/Spark/Id' /home/$USER/.bashrc
     if [[ "$1" = "a" ]] ; then
@@ -185,7 +185,7 @@ function test_master() {
 
 function install_spark() {
     clear
-    (install_java_7) & spinner $!    
+    (install_java_7) & spinner $!
     if [ "$(ls $SPARK_PREFIX | grep $SPARK | wc -l)" != "0" ]; then
         echo "Spark already installed"
         uninstall_spark
