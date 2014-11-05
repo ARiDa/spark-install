@@ -6,6 +6,10 @@ NODE_TYPE=$1
 
 SPARK=spark-1.1.0-bin-hadoop2.4
 
+SPARK_PREFIX=/usr/local/
+
+SPARK_HOME=$SPARK_PREFIX/$SPARK
+
 SPARK_WORKER_MEMORY=512m
 
 SPARK_MASTER_IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
@@ -33,10 +37,12 @@ function download_spark() {
         tar xzf $SPARK.tgz >> $LOG
     fi
 
+    mv $SPARK $SPARK_PREFIX
+
 }
 
 function enter_dir_spark() {
-    cd $SPARK
+    cd $SPARK_HOME
 }
 
 
@@ -54,3 +60,11 @@ function install_templates() {
         cat $DIR/slaves > conf/slaves
     fi
 }
+
+install_java_7
+download_spark
+enter_dir_spark
+install_templates $NODE_TYPE
+
+
+
