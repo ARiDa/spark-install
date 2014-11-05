@@ -5,7 +5,12 @@ Script to support Spark standalone mode install
 
 How to use
 ==========
-Firstly, include the slaves on **slaves** file.
+Firstly, include the slaves on **slaves** file. For example
+```
+localhost
+10.102.12.59
+10.102.12.123
+```
 
 ## Install on the master
 ``` bash
