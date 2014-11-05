@@ -146,9 +146,9 @@ function download_spark() {
 
 function bashrc_file() {
     if [[ "$1" = "a" ]]; then
-        printMsg "Adding Hadoop Environment Variables in $USER_NAME's .bashrc File"
+        printMsg "Adding Spark Environment Variables in $USER_NAME's .bashrc File"
     else
-        printMsg "Reverting Hadoop Environment Variables Changes"
+        printMsg "Reverting Spark Environment Variables Changes"
     fi
     sudo sed -i '/Spark/Id' /home/$USER/.bashrc
     if [[ "$1" = "a" ]] ; then
@@ -176,7 +176,7 @@ function install_templates() {
 }
 
 function test_master() {
-        echo "=> Testing Master"
+        echo "=> Testing as Master"
         echo "Starting master ..."
         sudo $SPARK_HOME/sbin/start-master.sh
         if [ $(sudo jps | grep 'Master' | wc -l) -eq 1 ]; then
@@ -194,7 +194,7 @@ function test_master() {
 
 function install_spark() {
     clear
-    (install_java_7) & spinner $!    
+    (install_java_7) & spinner $!
     if [ "$(ls $SPARK_PREFIX | grep $SPARK | wc -l)" != "0" ]; then
         echo "Spark already installed"
         uninstall_spark
@@ -206,9 +206,7 @@ function install_spark() {
     (install_templates $NODE_TYPE) & spinner $!
     echo "=> Spark installation complete";
 
-    if [ "$NODE_TYPE" == "master" ]; then
 	test_master
-    fi
 }
 
 install_spark
