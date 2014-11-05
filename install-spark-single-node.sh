@@ -67,9 +67,9 @@ function add_user_group()
 
 function install_java_7() {
     echo "Checking Java 7"
-    if [ "$(uname)" == "Linux"]; then
+    if [ "$(uname)" == "Linux" ]; then
         if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-7-jdk | grep 'installed' | wc -l) -eq 0 ]; then
-            echo "Installing Java 7"
+
             sudo apt-get update >> $LOG
             sudo apt-get install vim openjdk-7-jdk >> $LOG
         fi
@@ -125,11 +125,12 @@ function download_spark() {
         rm $SPARK.tgz
     fi
 
-    if [ $(ls $SPARK_PREFIX | grep '$SPARK' | wc -l ) -gt 0]; then
-        sudo rm -r $SPARK_HOME
+    if [ "$(ls $SPARK_PREFIX | grep '$SPARK' | wc -l)" != "0" ]; then
+        echo "removing $SPARK_HOME"
+	sudo rm -r $SPARK_HOME
     fi
 
-    sudo mv $SPARK $SPARK_PREFIX/
+    sudo cp -r $SPARK $SPARK_PREFIX/
     sudo chown -R $USER:$USER $SPARK_HOME
 
 }
@@ -151,32 +152,53 @@ function bashrc_file() {
 }
 
 function install_templates() {
-    echo "Installing templates"
+    echo "Installing templates for "$NODE_TYPE
     # spark-env/sh
-    cat $SPARK_HOME/conf/spark-env.sh.template > $SPARK_HOME/conf/spark-env.sh
+    sudo cp $SPARK_HOME/conf/spark-env.sh.template  $SPARK_HOME/conf/spark-env.sh
     # default
-    cat $SPARK_HOME/conf/spark-defaults.conf.template > $SPARK_HOME/conf/spark-defaults.conf
+    sudo cp $SPARK_HOME/conf/spark-defaults.conf.template  $SPARK_HOME/conf/spark-defaults.conf
 
-    if [ "$1" == "m" ]; then
-        echo "SPARK_MASTER_IP="$SPARK_MASTER_IP >> $SPARK_HOME/conf/spark-env.sh
-        echo "SPARK_WORKER_MEMORY="$SPARK_WORKER_MEMORY >> $SPARK_HOME/conf/spark-env.sh
+    if [ "$1" == "master" ]; then
+        echo "SPARK_MASTER_IP="$SPARK_MASTER_IP | sudo tee $SPARK_HOME/conf/spark-env.sh
+        echo "SPARK_WORKER_MEMORY="$SPARK_WORKER_MEMORY | sudo tee $SPARK_HOME/conf/spark-env.sh
         # slaves
-        cat $DIR/slaves > $SPARK_HOME/conf/slaves
+        sudo cp $DIR/slaves $SPARK_HOME/conf/slaves
     fi
 }
 
+function test_master() {
+        echo "=> Testing Master"
+        echo "Starting master ..."
+        sudo $SPARK_HOME/sbin/start-master.sh
+        if [ $(sudo jps | grep 'Master' | wc -l) -eq 1 ]; then
+                echo "Master is working!"
+                echo "Let's stop it, press any key ..."
+                read -n 1
+		sudo $SPARK_HOME/sbin/stop-master.sh
+                if [ $(sudo jps | grep 'Master' | wc -l) -eq 0 ]; then
+                        echo "Master stopped!"
+                fi
+        fi
+        echo "=> End test Master"
+
+}
+
 function install_spark() {
-    (install_java_7) & spinner $!
-    INSTALLED=check_spark_install
-    if [ $INSTALLED == true ]; then
+    clear
+    (install_java_7) & spinner $!    
+    if [ "$(ls $SPARK_PREFIX | grep $SPARK | wc -l)" != "0" ]; then
         echo "Spark already installed"
         uninstall_spark
     fi
     (download_spark) & spinner $!
     (add_user_group) & spinner $!
     (bashrc_file "a") & spinner $!
-    (install_templates $NODE_TYPE) & spinner $1
+    (install_templates $NODE_TYPE) & spinner $!
     echo "=> Spark installation complete";
+
+    if [ "$NODE_TYPE" == "master" ]; then
+	test_master
+    fi
 }
 
 install_spark
