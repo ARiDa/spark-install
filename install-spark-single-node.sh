@@ -167,7 +167,7 @@ function install_templates() {
 }
 
 function test_master() {
-        echo "=> Testing Master"
+        echo "=> Testing as Master"
         echo "Starting master ..."
         sudo $SPARK_HOME/sbin/start-master.sh
         if [ $(sudo jps | grep 'Master' | wc -l) -eq 1 ]; then
@@ -196,9 +196,7 @@ function install_spark() {
     (install_templates $NODE_TYPE) & spinner $!
     echo "=> Spark installation complete";
 
-    if [ "$NODE_TYPE" == "master" ]; then
 	test_master
-    fi
 }
 
 install_spark
