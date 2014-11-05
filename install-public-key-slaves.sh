@@ -3,7 +3,8 @@ USER="ubuntu"
 SLAVES=$(cat slaves | awk '{print $1}')
 
 function install_public_key(){
-    cat ~/.ssh/id_dsa.pub | ssh -t $USER@$1 "cat >> /home/spark/.ssh/authorized_keys"
+    sudo pkexec --user spark ssh-keygen -t rsa -P "" -f "/home/spark/.ssh/id_rsa.pub" -q
+    sudo cat /home/spark/.ssh/id_rsa.pub | ssh $USER@$1 "cat >> /home/spark/.ssh/authorized_keys"
 }
 
 function install_public_key_slaves() {

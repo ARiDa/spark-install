@@ -70,7 +70,9 @@ function setup_ssh() {
 	echo "ssh ..."
 	if [ ! -d "/home/$USER/.ssh" ]; then
 		sudo mkdir /home/$USER/.ssh
-        echo "" | sudo tee /home/$USER/.ssh/authorized_keys
+        if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
+            sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
+        fi
 		sudo chown -R ubuntu:ubuntu /home/$USER/.ssh
 	fi
 }
