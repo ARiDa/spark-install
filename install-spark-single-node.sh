@@ -63,6 +63,16 @@ function add_user_group()
             sudo usermod -a -G $USER $USER
         fi
     fi
+
+}
+
+function setup_ssh() {
+	echo "ssh ..."
+	if [ ! -d "/home/$USER/.ssh" ]; then
+		sudo mkdir /home/$USER/.ssh
+        echo "" | sudo tee /home/$USER/.ssh/authorized_keys
+		sudo chown -R ubuntu:ubuntu /home/$USER/.ssh
+	fi
 }
 
 function install_java_7() {
@@ -192,6 +202,7 @@ function install_spark() {
     fi
     (download_spark) & spinner $!
     (add_user_group) & spinner $!
+    (setup_ssh) & spinner $!
     (bashrc_file "a") & spinner $!
     (install_templates $NODE_TYPE) & spinner $!
     echo "=> Spark installation complete";

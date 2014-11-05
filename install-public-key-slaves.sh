@@ -3,7 +3,7 @@ USER="ubuntu"
 SLAVES=$(cat slaves | awk '{print $1}')
 
 function install_public_key(){
-    cat ~/.ssh/id_dsa.pub | ssh $USER@$1 "sudo mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+    cat ~/.ssh/id_dsa.pub | ssh -t $USER@$1 "cat >> /home/spark/.ssh/authorized_keys"
 }
 
 function install_public_key_slaves() {
