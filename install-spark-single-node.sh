@@ -79,7 +79,9 @@ function setup_ssh() {
 
         if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
             sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
+
         fi
+        sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
 		# sudo chown -R $USER:ubuntu /home/$USER/.ssh
 	fi
 }
