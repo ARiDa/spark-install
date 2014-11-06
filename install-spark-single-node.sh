@@ -82,7 +82,7 @@ function setup_ssh() {
         sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
     fi
 
-    sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
+    cat /home/$USER/.ssh/id_rsa.pub | sudo tee -a /home/$USER/.ssh/authorized_keys
     sudo chown $USER:$USER /home/$USER/.ssh/authorized_keys
     sudo chmod 640 /home/$USER/.ssh/authorized_keys
 
