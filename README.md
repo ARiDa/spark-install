@@ -14,19 +14,11 @@ localhost
 
 ## Install on the master
 ``` bash
-$ wget https://github.com/ARiDa/spark-install/archive/master.zip
-$ unzip master
-$ cd spark-install-master/
-$ ./install-spark-single-node.sh "m"
-$ ./install-public-key-slaves.sh
+$ cd ; rm -r master.zip spark-install* ; wget https://github.com/ARiDa/spark-install/archive/master.zip ; unzip master ; cd spark-install-master/ ; ./install-spark-single-node.sh master
 ```
-where "m" stands for master, and install-public-key-slaves.sh is gonna install the public key on the slaves
 
 ## Install on the slaves
 On each slave, do the following
 ``` bash
-$ wget https://github.com/ARiDa/spark-install/archive/master.zip
-$ unzip master
-$ cd spark-install-master/
-$ ./install-spark-single-node.sh
+$ cd ; rm -r master.zip spark-install* ; wget https://github.com/ARiDa/spark-install/archive/master.zip ; unzip master ; cd spark-install-master/ ; ./install-spark-single-node.sh slave
 ```
