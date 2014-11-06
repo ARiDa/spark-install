@@ -129,7 +129,7 @@ function uninstall_spark() {
 
 function delete_spark_files() {
     printMsg "Deleting Spark Folder ($SPARK_HOME/)"
-    sudo rm -f -r $SPARK_HOME
+    sudo pkexec --user $USER rm -f -r $SPARK_HOME
 }
 
 function download_spark() {
