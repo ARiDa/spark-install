@@ -82,6 +82,8 @@ function setup_ssh() {
 
         fi
         sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
+        sudo chown $USER:$USER /home/$USER/.ssh/authorized_keys
+        sudo chmod 640 /home/$USER/.ssh/authorized_keys
 
 	fi
     sudo chown -R $USER:$USER /home/$USER/.ssh
