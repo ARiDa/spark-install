@@ -84,7 +84,7 @@ function setup_ssh() {
         sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
 
 	fi
-    sudo chown -R $USER /home/$USER/.ssh
+    sudo chown -R $USER:$USER /home/$USER/.ssh
 }
 
 function install_java_7() {
