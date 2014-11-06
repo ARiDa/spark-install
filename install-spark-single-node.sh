@@ -186,18 +186,20 @@ function bashrc_file() {
 }
 
 function install_templates() {
-    echo "Installing templates for "$NODE_TYPE
+    printMsg "Install templates for "$NODE_TYPE
     # spark-env/sh
-    sudo pkexec --user $USER cp $SPARK_HOME/conf/spark-env.sh.template  $SPARK_HOME/conf/spark-env.sh
+    sudo cp $SPARK_HOME/conf/spark-env.sh.template  $SPARK_HOME/conf/spark-env.sh
     # default
-    sudo pkexec --user $USER cp $SPARK_HOME/conf/spark-defaults.conf.template  $SPARK_HOME/conf/spark-defaults.conf
+    sudo cp $SPARK_HOME/conf/spark-defaults.conf.template  $SPARK_HOME/conf/spark-defaults.conf
 
     if [ "$1" == "master" ]; then
-        echo "SPARK_MASTER_IP="$SPARK_MASTER_IP | sudo tee $SPARK_HOME/conf/spark-env.sh
+        echo "SPARK_MASTER_IP="$SPARK_MASTER_IP > sudo tee $SPARK_HOME/conf/spark-env.sh
         echo "SPARK_WORKER_MEMORY="$SPARK_WORKER_MEMORY | sudo tee $SPARK_HOME/conf/spark-env.sh
         # slaves
         sudo cp $DIR/slaves $SPARK_HOME/conf/slaves
     fi
+
+    sudo chown $USER:USER $SPARK_HOME/conf/*
 }
 
 function test_master() {
