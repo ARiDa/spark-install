@@ -74,7 +74,7 @@ function add_user_group()
 function setup_ssh() {
 	printMsg "Setup SSH"
 	if [ ! -d "/home/$USER/.ssh" ]; then
-		sudo pkexec --user /home/$USER/.ssh
+		sudo pkexec --user $USER /home/$USER/.ssh
         sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa.pub" -q
 
         if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
@@ -82,8 +82,9 @@ function setup_ssh() {
 
         fi
         sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
-		# sudo chown -R $USER:ubuntu /home/$USER/.ssh
+
 	fi
+    sudo chown -R $USER /home/$USER/.ssh
 }
 
 function install_java_7() {
