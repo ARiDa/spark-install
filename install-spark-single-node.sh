@@ -160,7 +160,7 @@ function bashrc_file() {
     else
         printMsg "Reverting Spark Environment Variables Changes"
     fi
-    sudo sed -i '/Spark/Id' /home/$USER/.bashrc
+    sudo pkexec --user $USER sed -i '/Spark/Id' /home/$USER/.bashrc
     if [[ "$1" = "a" ]] ; then
         sudo pkexec --user $USER echo -e "# Start: Set Spark-related environment variables" >> /home/$USER/.bashrc
         sudo pkexec --user $USER echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" >> /home/$USER/.bashrc
