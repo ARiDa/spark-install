@@ -168,11 +168,11 @@ function bashrc_file() {
     fi
     sudo sed -i '/Spark/Id' /home/$USER/.bashrc
     if [[ "$1" = "a" ]] ; then
-        sudo pkexec --user $USER echo -e "# Start: Set Spark-related environment variables" >> /home/$USER/.bashrc
-        sudo pkexec --user $USER echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" >> /home/$USER/.bashrc
-        sudo pkexec --user $USER echo -e "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin\t#Add Spark bin/ directory to PATH" >> /home/$USER/.bashrc
-        sudo pkexec --user $USER echo -e "export JAVA_HOME=${JAVA_HOME}\t#Java Path, Required For Spark" >> /home/$USER/.bashrc
-        sudo pkexec --user $USER echo -e "# End: Set Spark-related environment variables" >> /home/$USER/.bashrc
+        echo -e "# Start: Set Spark-related environment variables" | sudo tee -a /home/$USER/.bashrc
+        echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" | sudo tee -a /home/$USER/.bashrc
+        echo -e "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin\t#Add Spark bin/ directory to PATH" | sudo tee -a /home/$USER/.bashrc
+        echo -e "export JAVA_HOME=${JAVA_HOME}\t#Java Path, Required For Spark" | sudo tee -a /home/$USER/.bashrc
+        echo -e "# End: Set Spark-related environment variables" | sudo tee -a /home/$USER/.bashrc
     fi
 }
 
