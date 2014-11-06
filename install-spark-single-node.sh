@@ -141,9 +141,9 @@ function delete_spark_files() {
 
 function download_spark() {
     printMsg "Download $SPARK (Will skip if already installed)"
-    if [ !-d "$SPARK" ]; then
+    if [ ! -d "$SPARK" ]; then
 
-        if [ !-f "${SPARK}.tgz" ]; then
+        if [ ! -f "${SPARK}.tgz" ]; then
             wget http://d3kbcqa49mib13.cloudfront.net/$SPARK.tgz
         fi
         tar xzf $SPARK.tgz
