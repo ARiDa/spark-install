@@ -1,20 +1,25 @@
+#! /bin/bash
+# Author: Igo Brilhante
+
+set -e
+
 USER="spark"
-
+USER_PASS='spark'
 DIR=$(pwd)
-
 NODE_TYPE=$1
-
 SPARK=spark-1.1.0-bin-hadoop2.4
-
 JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
-
 SPARK_PREFIX=/usr/local
-
 SPARK_HOME=$SPARK_PREFIX/$SPARK
-
 SPARK_WORKER_MEMORY=512m
 
+totCols=`tput cols`
+now=$(date +"%m-%d-%Y-%T")
+
 SPARK_MASTER_IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+SLAVECNT=`cat slaves | wc -l`
+declare -a SLAVEIP
+SLAVES=`cat slaves | awk '{print $1}'`
 
 LOG=/tmp/spark_install.log
 
