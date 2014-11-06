@@ -64,7 +64,7 @@ function add_user_group()
         sudo adduser --ingroup $USER $USER --disabled-login -gecos "Spark User" -q
         echo spark:$USER_PASS | sudo chpasswd
     else
-        if [ `id $USER_NAME | egrep groups=[0-9]*'\($USER\)' -c` -eq 0 ]; then
+        if [ `id $USER | egrep groups=[0-9]*'\($USER\)' -c` -eq 0 ]; then
             sudo usermod -a -G $USER $USER
         fi
     fi
@@ -141,9 +141,9 @@ function delete_spark_files() {
 
 function download_spark() {
     printMsg "Download $SPARK (Will skip if already installed)"
-    if [ $(ls| grep $SPARK | wc -l) -eq 0 ]; then
+    if [ -d "$SPARK" ]; then
 
-        if [ $(ls| grep ${SPARK}.tgz | wc -l) -eq 0 ]; then
+        if [ -f "${SPARK}.tgz" ]; then
 
             wget http://d3kbcqa49mib13.cloudfront.net/$SPARK.tgz
         fi
@@ -213,7 +213,7 @@ function install_spark() {
     clear
     (install_policy_kit) & spinner $!
     (install_java_7) & spinner $!
-    if [ d $SPARK_HOME ]; then
+    if [ -d "$SPARK_HOME" ]; then
         echo "Spark already installed"
         uninstall_spark
     fi
