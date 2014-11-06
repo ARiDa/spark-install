@@ -199,7 +199,7 @@ function install_templates() {
         sudo cp $DIR/slaves $SPARK_HOME/conf/slaves
     fi
 
-    sudo chown $USER:USER $SPARK_HOME/conf/*
+    sudo chown $USER:$USER $SPARK_HOME/conf/*
 }
 
 function test_master() {
