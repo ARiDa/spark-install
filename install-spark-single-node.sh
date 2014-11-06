@@ -74,7 +74,7 @@ function add_user_group()
 function setup_ssh() {
 	printMsg "Setup SSH"
 	if [ ! -d "/home/$USER/.ssh" ]; then
-		sudo mkdir /home/$USER/.ssh
+		sudo pkexec --user /home/$USER/.ssh
         sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa.pub" -q
 
         if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
