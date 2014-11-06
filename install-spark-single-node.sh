@@ -74,8 +74,7 @@ function add_user_group()
 function setup_ssh() {
 	printMsg "Setup SSH"
 	if [ ! -d "/home/$USER/.ssh" ]; then
-		sudo pkexec --user $USER /home/$USER/.ssh
-
+		sudo pkexec --user $USER mkdir /home/$USER/.ssh
 	fi
 
     if [ ! -f "/home/$USER/.ssh/id_rsa.pub"] && [ "/home/$USER/.ssh/id_rsa"]; then
@@ -85,9 +84,10 @@ function setup_ssh() {
         sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
     fi
 
-    sudo cat /home/$USER/.ssh/id_rsa.pub | sudo tee -a /home/$USER/.ssh/authorized_keys
     sudo chown $USER:$USER /home/$USER/.ssh/authorized_keys
     sudo chmod 640 /home/$USER/.ssh/authorized_keys
+    sudo cat /home/$USER/.ssh/id_rsa.pub | sudo tee -a /home/$USER/.ssh/authorized_keys;
+
 
     sudo chown -R $USER:$USER /home/$USER/.ssh
 }
