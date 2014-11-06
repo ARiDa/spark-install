@@ -86,7 +86,7 @@ function setup_ssh() {
 
     sudo chown $USER:$USER /home/$USER/.ssh/authorized_keys
     sudo chmod 640 /home/$USER/.ssh/authorized_keys
-    sudo cat /home/$USER/.ssh/id_rsa.pub | sudo tee -a /home/$USER/.ssh/authorized_keys;
+    sudo cat /home/$USER/.ssh/id_rsa.pub | sudo tee -a /home/$USER/.ssh/authorized_keys
 
 
     sudo chown -R $USER:$USER /home/$USER/.ssh
