@@ -76,16 +76,16 @@ function setup_ssh() {
 	if [ ! -d "/home/$USER/.ssh" ]; then
 		sudo pkexec --user $USER /home/$USER/.ssh
         sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa.pub" -q
-
-        if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
-            sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
-
-        fi
-        sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
-        sudo chown $USER:$USER /home/$USER/.ssh/authorized_keys
-        sudo chmod 640 /home/$USER/.ssh/authorized_keys
-
 	fi
+
+    if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
+        sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
+    fi
+
+    sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
+    sudo chown $USER:$USER /home/$USER/.ssh/authorized_keys
+    sudo chmod 640 /home/$USER/.ssh/authorized_keys
+
     sudo chown -R $USER:$USER /home/$USER/.ssh
 }
 
