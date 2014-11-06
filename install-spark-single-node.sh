@@ -150,7 +150,7 @@ function download_spark() {
     fi
 
     sudo cp -r $SPARK $SPARK_PREFIX/
-    sudo chown -R $USER:$USER $SPARK_HOME
+    sudo chown -R $USER $SPARK_HOME
 
 }
 
@@ -162,20 +162,20 @@ function bashrc_file() {
     fi
     sudo sed -i '/Spark/Id' /home/$USER/.bashrc
     if [[ "$1" = "a" ]] ; then
-        echo -e "# Start: Set Spark-related environment variables" | sudo tee -a /home/$USER/.bashrc
-        echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" | sudo tee -a /home/$USER/.bashrc
-        echo -e "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin\t#Add Spark bin/ directory to PATH" | sudo tee -a /home/$USER/.bashrc
-        echo -e "export JAVA_HOME=${JAVA_HOME}\t#Java Path, Required For Spark" | sudo tee -a /home/$USER/.bashrc
-        echo -e "# End: Set Spark-related environment variables" | sudo tee -a /home/$USER/.bashrc
+        sudo pkexec --user $USER echo -e "# Start: Set Spark-related environment variables" >> /home/$USER/.bashrc
+        sudo pkexec --user $USER echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" >> /home/$USER/.bashrc
+        sudo pkexec --user $USER echo -e "export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin\t#Add Spark bin/ directory to PATH" >> /home/$USER/.bashrc
+        sudo pkexec --user $USER echo -e "export JAVA_HOME=${JAVA_HOME}\t#Java Path, Required For Spark" >> /home/$USER/.bashrc
+        sudo pkexec --user $USER echo -e "# End: Set Spark-related environment variables" >> /home/$USER/.bashrc
     fi
 }
 
 function install_templates() {
     echo "Installing templates for "$NODE_TYPE
     # spark-env/sh
-    sudo cp $SPARK_HOME/conf/spark-env.sh.template  $SPARK_HOME/conf/spark-env.sh
+    sudo pkexec --user $USER cp $SPARK_HOME/conf/spark-env.sh.template  $SPARK_HOME/conf/spark-env.sh
     # default
-    sudo cp $SPARK_HOME/conf/spark-defaults.conf.template  $SPARK_HOME/conf/spark-defaults.conf
+    sudo pkexec --user $USER cp $SPARK_HOME/conf/spark-defaults.conf.template  $SPARK_HOME/conf/spark-defaults.conf
 
     if [ "$1" == "master" ]; then
         echo "SPARK_MASTER_IP="$SPARK_MASTER_IP | sudo tee $SPARK_HOME/conf/spark-env.sh
@@ -188,13 +188,13 @@ function install_templates() {
 function test_master() {
         printMsg "Test as Master"
         echo "Starting master ..."
-        sudo $SPARK_HOME/sbin/start-master.sh
-        if [ $(sudo jps | grep 'Master' | wc -l) -eq 1 ]; then
+        sudo pkexec --user $USER $SPARK_HOME/sbin/start-master.sh
+        if [ $(sudo pkexec --user $USER jps | grep 'Master' | wc -l) -eq 1 ]; then
                 echo "Master is working!"
                 echo "Let's stop it, press any key ..."
                 read -n 1
-		sudo $SPARK_HOME/sbin/stop-master.sh
-                if [ $(sudo jps | grep 'Master' | wc -l) -eq 0 ]; then
+		sudo pkexec --user $USER $SPARK_HOME/sbin/stop-master.sh
+                if [ $(sudo pkexec --user $USER jps | grep 'Master' | wc -l) -eq 0 ]; then
                         echo "Master stopped!"
                 fi
         fi
@@ -209,8 +209,8 @@ function install_spark() {
         echo "Spark already installed"
         uninstall_spark
     fi
-    (download_spark) & spinner $!
     (add_user_group) & spinner $!
+    (download_spark) & spinner $!
     (setup_ssh) & spinner $!
     (bashrc_file "a") & spinner $!
     (install_templates $NODE_TYPE) & spinner $!
