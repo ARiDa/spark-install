@@ -75,8 +75,11 @@ function setup_ssh() {
 	printMsg "Setup SSH"
 	if [ ! -d "/home/$USER/.ssh" ]; then
 		sudo pkexec --user $USER /home/$USER/.ssh
-        sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa.pub" -q
+
 	fi
+
+    if [ ! -f "/home/$USER/.ssh/id_rsa.pub"] && [ "/home/$USER/.ssh/id_rsa"]; then
+        sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa" -q
 
     if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
         sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
@@ -99,7 +102,7 @@ function install_java_7() {
         fi
 
         if [ $(jps | grep  'Jps' | wc -l) -eq 1 ]; then
-            echo "Java 7 installed"
+            echo "=> Java 7 installed"
         fi
     fi
 }
