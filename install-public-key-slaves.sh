@@ -4,7 +4,7 @@ SLAVES=$(cat slaves | awk '{print $1}')
 
 function install_public_key(){
 
-    sudo cat /home/$USER/.ssh/id_rsa.pub | ssh $USER@$1 "cat >> ~/.ssh/authorized_keys"
+    sudo pkexec --user $USER cat /home/$USER/.ssh/id_rsa.pub | ssh $USER@$1 "cat >> ~/.ssh/authorized_keys"
 }
 
 function install_public_key_slaves() {

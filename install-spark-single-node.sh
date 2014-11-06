@@ -74,8 +74,7 @@ function add_user_group()
 function setup_ssh() {
 	printMsg "Setup SSH"
 	if [ ! -d "/home/$USER/.ssh" ]; then
-		sudo mkdir /home/$USER/.ssh
-        sudo chown -R $USER:$USER /home/$USER/.ssh
+		sudo pkexec --user $USER mkdir /home/$USER/.ssh
 	fi
 
     if [ ! -f "/home/$USER/.ssh/id_rsa.pub" ] && [ ! -f "/home/$USER/.ssh/id_rsa" ]; then
