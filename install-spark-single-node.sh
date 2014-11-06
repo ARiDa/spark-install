@@ -195,15 +195,15 @@ function install_templates() {
 
 function test_master() {
         printMsg "Test as Master"
-        echo "Starting master ..."
+        echo " Starting master ..."
         sudo pkexec --user $USER $SPARK_HOME/sbin/start-master.sh
         if [ $(sudo pkexec --user $USER jps | grep 'Master' | wc -l) -eq 1 ]; then
-                echo "Master is working!"
-                echo "Let's stop it, press any key ..."
-                read -n 1
+                echo " Master is working!"
+                echo " Let's stop it!"
+
 		sudo pkexec --user $USER $SPARK_HOME/sbin/stop-master.sh
                 if [ $(sudo pkexec --user $USER jps | grep 'Master' | wc -l) -eq 0 ]; then
-                        echo "Master stopped!"
+                        echo " Master stopped!"
                 fi
         fi
         echo "=> End test Master"
