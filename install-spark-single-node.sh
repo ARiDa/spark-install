@@ -151,9 +151,9 @@ function download_spark() {
         rm $SPARK.tgz
     fi
 
-    if [ "$(ls $SPARK_PREFIX | grep '$SPARK' | wc -l)" != "0" ]; then
-        echo "removing $SPARK_HOME"
-	sudo rm -r $SPARK_HOME
+    if [ -d "$SPARK_HOME" ]; then
+       echo "removing $SPARK_HOME"
+	   sudo rm -r $SPARK_HOME
     fi
 
     sudo cp -r $SPARK $SPARK_PREFIX/
