@@ -72,7 +72,7 @@ function add_user_group()
 }
 
 function setup_ssh() {
-	echo "ssh ..."
+	printMsg "Setup SSH"
 	if [ ! -d "/home/$USER/.ssh" ]; then
 		sudo mkdir /home/$USER/.ssh
         sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa.pub" -q
@@ -80,12 +80,12 @@ function setup_ssh() {
         if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
             sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
         fi
-		sudo chown -R ubuntu:ubuntu /home/$USER/.ssh
+		# sudo chown -R $USER:ubuntu /home/$USER/.ssh
 	fi
 }
 
 function install_java_7() {
-    echo "Checking Java 7"
+    printMsg "Checking Java 7"
     if [ "$(uname)" == "Linux" ]; then
         if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-7-jdk | grep 'installed' | wc -l) -eq 0 ]; then
 
@@ -186,7 +186,7 @@ function install_templates() {
 }
 
 function test_master() {
-        echo "=> Testing as Master"
+        printMsg "Test as Master"
         echo "Starting master ..."
         sudo $SPARK_HOME/sbin/start-master.sh
         if [ $(sudo jps | grep 'Master' | wc -l) -eq 1 ]; then
