@@ -140,11 +140,11 @@ function delete_spark_files() {
 }
 
 function download_spark() {
-
+    printMsg "Download $SPARK (Will skip if already installed)"
     if [ $(ls| grep $SPARK | wc -l) -eq 0 ]; then
 
         if [ $(ls| grep ${SPARK}.tgz | wc -l) -eq 0 ]; then
-            echo "Downloading "$SPARK
+
             wget http://d3kbcqa49mib13.cloudfront.net/$SPARK.tgz
         fi
         tar xzf $SPARK.tgz
@@ -213,7 +213,7 @@ function install_spark() {
     clear
     (install_policy_kit) & spinner $!
     (install_java_7) & spinner $!
-    if [ d $SPARK ]; then
+    if [ d $SPARK_HOME ]; then
         echo "Spark already installed"
         uninstall_spark
     fi
