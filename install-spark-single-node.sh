@@ -107,6 +107,13 @@ function check_spark_install() {
     return false
 }
 
+function install_policy_kit() {
+    printMsg "Installing Policy Kit (Will skip if already installed)"
+    if [ `apt-cache search '^policykit-1$' | wc -l` -eq 1 ] && [ `apt-cache policy policykit-1 | grep -i 'installed:' | grep '(none)' -i -c` -eq 1 ] ; then
+        sudo apt-get -y install policykit-1 >> /tmp/hadoop_install.log 2>&1
+    fi
+}
+
 function uninstall_spark() {
 
     read -n 1 -p "Are you sure (y/n)? " sure
@@ -129,7 +136,7 @@ function uninstall_spark() {
 
 function delete_spark_files() {
     printMsg "Deleting Spark Folder ($SPARK_HOME/)"
-    sudo pkexec --user $USER rm -f -r $SPARK_HOME
+    sudo rm -f -r $SPARK_HOME
 }
 
 function download_spark() {
@@ -160,7 +167,7 @@ function bashrc_file() {
     else
         printMsg "Reverting Spark Environment Variables Changes"
     fi
-    sudo pkexec --user $USER sed -i '/Spark/Id' /home/$USER/.bashrc
+    sudo sed -i '/Spark/Id' /home/$USER/.bashrc
     if [[ "$1" = "a" ]] ; then
         sudo pkexec --user $USER echo -e "# Start: Set Spark-related environment variables" >> /home/$USER/.bashrc
         sudo pkexec --user $USER echo -e "export SPARK_HOME=$SPARK_HOME\t#Spark Home Folder Path" >> /home/$USER/.bashrc
@@ -204,8 +211,9 @@ function test_master() {
 
 function install_spark() {
     clear
+    (install_policy_kit) & spinner $!
     (install_java_7) & spinner $!
-    if [ "$(ls $SPARK_PREFIX | grep $SPARK | wc -l)" != "0" ]; then
+    if [ d $SPARK ]; then
         echo "Spark already installed"
         uninstall_spark
     fi
