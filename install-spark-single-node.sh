@@ -77,11 +77,11 @@ function setup_ssh() {
 		sudo pkexec --user $USER mkdir /home/$USER/.ssh
 	fi
 
-    if [ ! -f "/home/$USER/.ssh/id_rsa.pub"] && [ ! -f "/home/$USER/.ssh/id_rsa"]; then
+    if [ ! -f "/home/$USER/.ssh/id_rsa.pub" ] && [ ! -f "/home/$USER/.ssh/id_rsa" ]; then
         sudo pkexec --user $USER ssh-keygen -t rsa -P "" -f "/home/$USER/.ssh/id_rsa" -q
     fi
 
-    if [ ! -f /home/$USER/.ssh/authorized_keys ]; then
+    if [ ! -f "/home/$USER/.ssh/authorized_keys" ]; then
         sudo pkexec --user $USER touch /home/$USER/.ssh/authorized_keys
     fi
 
