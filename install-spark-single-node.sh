@@ -7,7 +7,7 @@ USER="spark"
 USER_PASS='spark'
 DIR=$(pwd)
 NODE_TYPE=$1
-SPARK=spark-1.1.0-bin-hadoop2.4
+SPARK=spark-2.0.0-bin-hadoop2.7
 JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
 SPARK_PREFIX=/usr/local
 SPARK_HOME=$SPARK_PREFIX/$SPARK
@@ -96,7 +96,7 @@ function setup_ssh() {
 function install_java_7() {
     printMsg "Checking Java 7"
     if [ "$(uname)" == "Linux" ]; then
-        if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-7-jdk | grep 'installed' | wc -l) -eq 0 ]; then
+        if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-8-jdk | grep 'installed' | wc -l) -eq 0 ]; then
 
             sudo apt-get update >> $LOG
             sudo apt-get install vim openjdk-7-jdk >> $LOG
