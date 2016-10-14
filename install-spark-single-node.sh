@@ -96,10 +96,15 @@ function setup_ssh() {
 function install_java_7() {
     printMsg "Checking Java 7"
     if [ "$(uname)" == "Linux" ]; then
-        if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-8-jdk | grep 'installed' | wc -l) -eq 0 ]; then
+        if [ $(dpkg-query -W -f='${Status} ${Version}\n' oracle-java8-installer | grep 'installed' | wc -l) -eq 0 ]; then
 
-            sudo apt-get update >> $LOG
-            sudo apt-get install vim openjdk-8-jdk >> $LOG
+            echo "Installing Java"
+	        sudo apt-get -y install software-properties-common >> $LOG
+	        add-apt-repository -y ppa:webupd8team/java >> $LOG
+	        apt-get -y update >> $LOG
+	        echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections >> $LOG
+	        apt-get -y install oracle-java8-installer >> $LOG
+	
         fi
 
         if [ $(jps | grep  'Jps' | wc -l) -eq 1 ]; then
