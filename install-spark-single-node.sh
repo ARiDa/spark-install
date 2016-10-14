@@ -7,8 +7,8 @@ USER="spark"
 USER_PASS='spark'
 DIR=$(pwd)
 NODE_TYPE=$1
-SPARK=spark-1.1.0-bin-hadoop2.4
-JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+SPARK=spark-2.0.0-bin-hadoop2.7
+JAVA_HOME=/usr/lib/jvm/java-8-oracle/
 SPARK_PREFIX=/usr/local
 SPARK_HOME=$SPARK_PREFIX/$SPARK
 SPARK_WORKER_MEMORY=512m
@@ -96,10 +96,15 @@ function setup_ssh() {
 function install_java_7() {
     printMsg "Checking Java 7"
     if [ "$(uname)" == "Linux" ]; then
-        if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-7-jdk | grep 'installed' | wc -l) -eq 0 ]; then
+        if [ $(dpkg-query -W -f='${Status} ${Version}\n' oracle-java8-installer | grep 'installed' | wc -l) -eq 0 ]; then
 
-            sudo apt-get update >> $LOG
-            sudo apt-get install vim openjdk-7-jdk >> $LOG
+            echo "Installing Java"
+	        sudo apt-get -y install software-properties-common >> $LOG
+	        add-apt-repository -y ppa:webupd8team/java >> $LOG
+	        apt-get -y update >> $LOG
+	        echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections >> $LOG
+	        apt-get -y install oracle-java8-installer >> $LOG
+	
         fi
 
         if [ $(jps | grep  'Jps' | wc -l) -eq 1 ]; then
@@ -193,7 +198,7 @@ function install_templates() {
     sudo cp $SPARK_HOME/conf/spark-defaults.conf.template  $SPARK_HOME/conf/spark-defaults.conf
 
     if [ "$1" == "master" ]; then
-        echo "SPARK_MASTER_IP="$SPARK_MASTER_IP > sudo tee $SPARK_HOME/conf/spark-env.sh
+        echo "SPARK_MASTER_HOST="$SPARK_MASTER_IP > sudo tee $SPARK_HOME/conf/spark-env.sh
         echo "SPARK_WORKER_MEMORY="$SPARK_WORKER_MEMORY | sudo tee $SPARK_HOME/conf/spark-env.sh
         # slaves
         sudo cp $DIR/slaves $SPARK_HOME/conf/slaves
