@@ -8,7 +8,7 @@ USER_PASS='spark'
 DIR=$(pwd)
 NODE_TYPE=$1
 SPARK=spark-2.0.0-bin-hadoop2.7
-JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 SPARK_PREFIX=/usr/local
 SPARK_HOME=$SPARK_PREFIX/$SPARK
 SPARK_WORKER_MEMORY=512m
@@ -99,7 +99,7 @@ function install_java_7() {
         if [ $(dpkg-query -W -f='${Status} ${Version}\n' openjdk-8-jdk | grep 'installed' | wc -l) -eq 0 ]; then
 
             sudo apt-get update >> $LOG
-            sudo apt-get install vim openjdk-7-jdk >> $LOG
+            sudo apt-get install vim openjdk-8-jdk >> $LOG
         fi
 
         if [ $(jps | grep  'Jps' | wc -l) -eq 1 ]; then
@@ -193,7 +193,7 @@ function install_templates() {
     sudo cp $SPARK_HOME/conf/spark-defaults.conf.template  $SPARK_HOME/conf/spark-defaults.conf
 
     if [ "$1" == "master" ]; then
-        echo "SPARK_MASTER_IP="$SPARK_MASTER_IP > sudo tee $SPARK_HOME/conf/spark-env.sh
+        echo "SPARK_MASTER_HOST="$SPARK_MASTER_IP > sudo tee $SPARK_HOME/conf/spark-env.sh
         echo "SPARK_WORKER_MEMORY="$SPARK_WORKER_MEMORY | sudo tee $SPARK_HOME/conf/spark-env.sh
         # slaves
         sudo cp $DIR/slaves $SPARK_HOME/conf/slaves
